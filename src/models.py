@@ -1,12 +1,19 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from eralchemy import render_er
 
 Base = declarative_base()
+
+# association_table = Table(
+#     "association",
+#     Base.metadata,
+#     Column("favoritos_id", ForeignKey("favoritos.id")),
+#     Column("personajes_id", ForeignKey("personajes.id")),
+# )
 
 class Usuario(Base):
     __tablename__ = 'usuario'
@@ -29,31 +36,37 @@ class Favoritos(Base):
     usuario = relationship("usuario")  
     personajes = relationship("personajes")
     vehiculos = relationship("vehiculos")
-    planetas = relationship("planetas")
+    planetas = relationship("Planetas")
 
 class Personajes(Base):
     __tablename__ = "personajes"
     id = Column(Integer, primary_key=True)
-    personaje_id = Column(Integer, ForeignKey("favoritos.personajes_id")) 
+    personaje_id = Column(Integer) 
     nombre = Column(String(200))
     genero = Column(String(1))
     colorPelo = Column(String(150))
     colorOjos = Column(String(150))
+    favoritos_id = Column(Integer, ForeignKey("favoritos.id"))
+    favoritos = relationship("Favoritos")
 
 class Planetas(Base):
     __tablename__ = "planetas"
     id = Column(Integer, primary_key=True)
-    planetas_id = Column(Integer, ForeignKey("favoritos.planetas_id"))
+    planetas_id = Column(Integer)
     nombre = Column(String(200))
     habitantes = Column(Integer)
+    favoritos_id = Column(Integer, ForeignKey("favoritos.id"))
+    favoritos = relationship("Favoritos")
 
 class Vehiculos(Base):
     __tablename__ = "vehiculos"
     id = Column(Integer, primary_key=True)
-    vehiculos_id = Column(Integer, ForeignKey("favoritos.vehiculos_id") )
+    vehiculos_id = Column(Integer)
     nombre = Column(String(200))
     modelo = Column(String(200))
     fabricante = Column(String(200))
+    favoritos_id = Column(Integer, ForeignKey("favoritos.id"))
+    favoritos = relationship("Favoritos")
 
 
 # class Person(Base):
